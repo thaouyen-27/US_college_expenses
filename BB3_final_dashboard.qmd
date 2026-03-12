@@ -1,0 +1,390 @@
+---
+title: "State-Level Tuition Costs and Patterns of Student Debt Cancellation"
+author: Uyen Vuong, Zaya Enkh
+date: 03/06/2026
+format: 
+  dashboard:
+    theme: journal
+    embed-resources: true
+---
+
+
+```{r}
+#install.packages("DT")
+#install.packages("plotly")
+#install.packages("maps")
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(maps)
+```
+
+
+```{r}
+all_college_cost_df <- read.csv("college_cost.csv")
+debt_cancel_df <- read.csv("debt_cancellation.csv")
+state_shape <- map_data("state")
+
+```
+
+# Topic introduction
+
+## Row 1 {height=50%}
+
+### Row 1 Column 1
+::: {.card title="**Background**"}
+
+Choosing where to attend college is one of the most important decisions students make when planning their future. In the United States, the cost of higher education varies widely across states, making tuition and total attending cost important factors for students and families when deciding where to study. Over the past several decades, rising college costs have significantly increased the financial burden of attending college, leading many students to rely on loans to finance their education. According to the Education Data Initiative, Americans collectively owe more than $1.7 trillion in student loan debt, making it one of the largest categories of household debt in the country [https://educationdata.org/student-loan-debt-statistics](https://educationdata.org/student-loan-debt-statistics). Understanding how college costs differ by state and how those costs relate to patterns of student loan debt relief can provide useful insights into the financial landscape of higher education.
+
+<img src = "loan.png" height = "300px" width = "400px">
+
+:::
+
+
+### Row 1 Column 2
+::: {.card title="**Research Questions**"}
+
+This project explores how college costs vary across the United States and how those costs may relate to federal student loan cancellation patterns. In particular, this analysis focuses on three main questions:
+
+**1. What is the average total college cost for a typical public four year bachelor’s program in each US state in 2020?**
+
+**2. How did college tuition change between 2013 and 2020 in all of the states?**
+
+**3. How do state-level college costs compare with the number of borrowers receiving federal student debt cancellation in 2024?**
+
+Together, these questions allow us to explore both historical trends in college affordability and more recent patterns in debt relief.
+
+:::
+
+::: {.card title="**Importance of This Project**"}
+
+This analysis addresses an important question about the financial realities of higher education in the United States. As tuition costs continue to rise, many students rely on loans to afford college, making student debt a major financial burden for millions of borrowers. So, by comparing state-level tuition costs with patterns of federal student debt cancellation, this project helps highlight how the cost of attending college may relate to the amount of financial relief borrowers receive. We think, understanding these patterns can provide insight into the broader relationship between college affordability and student debt, helping students, policymakers, and researchers better understand the financial challenges associated with higher education.
+
+To provide additional context for this topic, the project will also include visualizations and figures illustrating tuition trends and state level comparisons. 
+
+:::
+
+
+# Data context
+
+## Row 1 {height=30%}
+
+::: {.card title="**Datasets Sources**"}
+
+To investigate the research questions, this project used two datasets from publicly available government sources. The first dataset comes from the National Center for Education Statistics (NCES), which provides state level information about tuition and fees for public four year institutions across multiple years [https://nces.ed.gov/](https://nces.ed.gov/). The second dataset contains information about the total number of borrowers who received approved federal student debt cancellation by state in 2024, compiled from U.S. Department of Education reporting [https://studentaid.gov/](https://studentaid.gov/). By combining these datasets, we can examine how differences in tuition levels across states relate to patterns of debt relief among borrowers.
+
+:::
+
+## Row 2 {height=40%}
+
+### Row 2 Column 1
+::: {.card title="**Dataset 1: Average Expenses of Undergraduate College by State**"}
+
+Public URL: [https://www.kaggle.com/datasets/kfoster150/nces-avg-cost-of-undergraduate-college-by-state](https://www.kaggle.com/datasets/kfoster150/nces-avg-cost-of-undergraduate-college-by-state)
+
+This dataset was compiled by a Kaggle user with the account name "KenmoreToast". Original data were collected from the official webpage of the National Center of Education Statistics Annual Digest, Table 330.20: Average undergraduate tuition and fees and room and board rates charged for full-time students in degree-granting postsecondary institutions, by control and level of institution and state or jurisdiction.
+
+This dataset contains a total of 3,203 data entries covering 50 US states and Washington DC during years 2013-2020. As data were collected by the NCES, a US federal statistical agency, we believe data are reliable and realistically report the expenses of attending college at every US state to serve as a good reference for students and families in planning for higher education. However, this dataset does not reflect actual expenses in years after 2020 to present. Additionally, no data can fully capture personal lifestyle and living conditions so readers should allow some flexible adjustments when considering their own needs. 
+
+:::
+
+### Row 2 Column 2
+::: {.card title="**Dataset 2: Approved Debt Relief by State**"}
+
+Public URL: [https://catalog.data.gov/dataset/approved-debt-relief-by-state-3224c](https://catalog.data.gov/dataset/approved-debt-relief-by-state-3224c)
+
+This dataset was published by the Office of Communications and Outreach of the Department of Education on the United States government official website. The dataset contained details on the total number of borrowers with approved college debt cancellation amount in year 2024 across 50 US states, Washington DC, and Puerto Rico. Data provide the total number of borrowers and the total dollar amount forgiven, and we based on that to calculate an estimated average forgiveness amount per student, so it does not reflect the exact amount. However, this will serve as a god reference for students when considering institutions, states, and governmental assistance in relieving college expenses burden.
+
+:::
+
+## Row 3 {height=30%}
+
+::: {.card title="**Ethics and Limitations**"}
+
+When using these datasets, some of the ethical questions and limitations that we considered are that the tuition data reflects average costs for public four year institutions and may not fully capture differences in financial aid or individual student circumstances. In addition, the debt cancellation data reports the number of borrowers by state but does not indicate where those borrowers originally attended college. While these factors mean the datasets cannot explain every aspect of student debt, they still provide useful insights into broader patterns between college costs and borrower relief across states.
+
+:::
+
+# Original datasets
+
+## Row 1 {height=20%}
+::: {.card title="**Original Datasets**"}
+This page shows the original datasets before they were merged. Viewing the raw data helps provide transparency and context for how the information was collected and used in the analysis.
+:::
+
+## Row 2 {height=80%}
+
+### Row 2 Column 1
+
+```{r}
+#| title: "**College Expenses 2013-2020 by State**"
+all_college_cost_df |> datatable()
+
+```
+
+### Row 2 Column 2
+
+```{r}
+#| title: "**College Debt Cancellation in 2024 by State**"
+debt_cancel_df |> datatable()
+
+```
+
+
+# Joined dataset
+
+::: {.card title="**Joined Dataset**"}
+
+This page shows the joined dataset combining state-level college tuition data (2013-2020) with student debt cancellation data (2024). To simplify, we decided to work only with Public, In-state, 4-year institutions data. Each row represents a U.S. state and includes the estimated total cost of attending a college program (2013-2020) along with the number of borrowers and total amount of debt relief approved in that state (2024).
+
+* Note: There are different college loan forgiveness programs, each has different terms to follow. To simplify, in this project, we assume a loan forgiveness is approved 10 years after the graduation year. 
+For more information on student loan forgiveness, please visit [https://studentaid.gov/articles/student-loan-forgiveness/](https://studentaid.gov/articles/student-loan-forgiveness/)
+
+
+```{r}
+# To simplify, we decided to work only with Public, In-state, 4-year institutions data, so we filter for these categories.
+college_cost_df <-
+  all_college_cost_df |>
+  filter(Type == "Public In-State", Length == "4-year") |>
+  select(Year, State, Expense, Value)
+
+```
+
+
+```{r}
+# Join the 2 datasets college_cost_df and debt_cancel_df by state names to merge two datasets into one big dataset for further analysis and graphing
+
+joined_df <-
+  college_cost_df |>
+  inner_join(debt_cancel_df, join_by("State"))
+```
+
+
+```{r}
+# Rename some columns to a better format and more concise
+joined_df <-
+  joined_df |>
+  rename(forgiven_count = Borrower.Count, forgiven_amount_total_millions_usd = Dollar.Amount..in.millions.)
+```
+
+
+```{r}
+# Perform some modifications to the joined_df:
+# Group data by State and Year, then
+# calculate the total college attending cost of 1 year by adding tuition and room/board fees to have total expenses,
+# calculate the total college attending cost of 4 years by multiplication (oversimplified by assuming all fees are similar for 4 years) to have the estimated expense to complete a typical bachelor's degree, 
+# and report and/or round up amount of other debt forgiveness values
+
+joined_df <-
+  joined_df |>
+  group_by(State, Year) |>
+  summarize(
+    cost_1_year = sum(Value),
+    cost_4_year = cost_1_year * 4,
+    forgiven_count = mean(forgiven_count),
+    forgiven_amount_total_millions_usd = mean(forgiven_amount_total_millions_usd),
+    forgiven_amount_per_student_usd = round(forgiven_amount_total_millions_usd * 10^6 / forgiven_count, 2)
+    )
+
+```
+
+
+```{r}
+# Display the joined and cleaned dataset
+
+#| title: "College cost and college debt cancellation joined dataset"
+joined_df |> datatable()
+```
+:::
+
+# Average College Expenses in 2020
+```{r}
+# Question 1: What is the average total college cost for a typical public four year bachelor’s program in each US state in 2020?
+```
+::: {.card title="**Average College Expenses **"}
+
+The bar graph below presents the average total college expenses for a public four-year bachelor’s program in each US state in 2020.
+
+* Tip: Move pointer to the bar representing the state of interest to view the estimated 4-year expenses. 
+
+```{r}
+# Filter Year 2020 from the dataset because 2020 is the most latest data we have.
+
+joined_2020_df <-
+  joined_df |>
+  filter(Year == 2020)
+```
+
+```{r}
+# Make a bar plot presenting average college cost per student by US state in 2020
+
+#| title: Average college debt forgiveness per student by state
+plot_1 <- ggplot(joined_2020_df, aes(x = State, y = cost_4_year)) +
+  geom_bar(stat = "identity", fill = "cyan4") +
+  labs(
+    title = "Average college cost per student by US state in 2020",
+    x = "State",
+    y = "College cost (USD)"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+plot_1 |> ggplotly()
+
+```
+
+:::
+
+# College Expense Changes 2013-2020
+
+```{r}
+# Question 2: How did college cost change between 2013 and 2020 in every state?
+
+```
+::: {.card title="**College Expense Changes 2013-2020**"}
+
+The line graph below demonstrates the college expense changes every year from 2013 to 2020 in all US states.
+
+* Tip: Double-click on a state of interest from the state list on the right to view an isolated trace of that specific state. Move pointer to the year point on the linear trace to view the corresponding amount.
+
+```{r}
+plot_2 <- ggplot(joined_df, aes(x = Year, y = cost_1_year)) +
+  geom_line(aes(color=State)) +
+  labs(
+    title = "College expenses between 2013-2020 by state",
+    x = "Year",
+    y = "Annual college cost (USD)"
+  )
+
+plot_2 |> ggplotly()
+```
+
+:::
+
+# College cost 2014 vs Loan forgiveness 2024
+```{r}
+# Question 3: How do state-level college costs compare with the number of borrowers receiving federal student debt cancellation in 2024?
+
+```
+
+
+## Row 1 {height=30%}
+
+
+::: {.card title="**College cost 2014 vs Loan forgiveness 2024**"}
+These 2 maps show average college expenses by state in 2014 and average college loan forgiveness by state in 2024 (10 years later). As mentioned, we assume a loan forgiveness is approved 10 years after the graduation year for simplification of analysis.
+There are many different college loan forgiveness programs, for more information, please visit [https://studentaid.gov/articles/student-loan-forgiveness/](https://studentaid.gov/articles/student-loan-forgiveness/)
+
+* Tip: Move pointer to the state of interest on the map to view specific amount.
+:::
+
+## Row 2 {height=70%}
+
+### Row 2 Column 1
+
+
+```{r}
+# Filter Year 2014 from the dataset
+
+joined_2014_df <-
+  joined_df |>
+  filter(Year == 2014)
+```
+
+
+```{r}
+# Create 1 additional column to have state names all in lowercase to match the state names in
+# state_shape dataframe so it's easier to create maps later
+joined_2014_df <-
+  joined_2014_df |>
+  mutate(state_lowercase = tolower(State))
+```
+
+```{r}
+# Join the joined_2014_df with state_shape df to prepare for next step of making choropleth map
+college_state_shape_joined <-
+  joined_2014_df |>
+  full_join(state_shape, join_by(state_lowercase == region))
+```
+
+```{r}
+# Make a choropleth map showing 4-year college cost in 2014 of all states.
+# We want to display side-by-side comparison between college cost in 2014 and loan forgiveness in 2024, so we need to use the choropleth maps to best display values for each US state in both cases.
+
+
+#| title: Average college cost (4 year) per student by state in 2014
+
+plot_3 <- ggplot(college_state_shape_joined) +
+    geom_polygon(mapping = aes(
+      x = long,
+      y = lat,
+      group = group,
+      fill = cost_4_year
+    )) + 
+  labs(title = "Average college cost in 2014 by state",
+       fill = "USD")
+
+plot_3 |> ggplotly()
+```
+
+### Row 2 Column 2
+
+
+```{r}
+# Make a choropleth map showing averaged college debt forgiveness per student by state in 2024
+# We want to display side-by-side comparison between college cost in 2014 and loan forgiveness in 2024, so we need to use the choropleth maps to best display values for each US state in both cases.
+
+#| title: Average college debt forgiveness per student by state in 2024
+
+plot_4 <- ggplot(college_state_shape_joined) +
+    geom_polygon(mapping = aes(
+      x = long,
+      y = lat,
+      group = group,
+      fill = forgiven_amount_per_student_usd
+    )) + 
+  labs(title = "Average college loan forgiveness in 2024 by state",
+       fill = "USD")
+
+plot_4 |> ggplotly()
+```
+
+
+
+
+# Summary
+
+## Row 1 {height=80%}
+
+::: {.card title="**Summary takeaways**"}
+
+This analysis explored how college costs vary across US states, how those costs changed between 2013 and 2020, and how they compare with patterns of student loan forgiveness in 2024. One major takeaway from the project is that college expenses have generally increased over time in nearly every state. As shown in the line graph, most states experienced steady increases in tuition between 2013 and 2020, indicating that the cost of attending college has become more expensive over the years. The bar chart further highlights the differences across states in 2020, where some states such as Massachusetts, Vermont, and New Jersey show much higher average four-year costs compared to states like Wyoming or Florida. This suggests that the financial burden of college varies significantly depending on where students choose to study.
+
+
+A second important takeaway comes from comparing tuition costs with student loan forgiveness patterns. The maps comparing college cost in 2014 with loan forgiveness in 2024 suggest that states with larger populations and higher college participation tend to show higher total amounts of loan forgiveness. States such as California, Texas, and Florida appear darker on the loan forgiveness map, indicating larger amounts of relief distributed to borrowers. While the relationship is not perfectly direct, the comparison suggests that areas with larger student populations and higher education costs may also see greater levels of debt cancellation.
+
+
+However, there are some potential biases and limitations in this analysis. The data may overestimate the relationship between tuition and loan forgiveness because the forgiveness dataset reflects the total number of borrowers in each state rather than where students originally attended college. In addition, larger states naturally have more borrowers, which can lead to higher total forgiveness amounts regardless of tuition levels. Future research could improve this analysis by adjusting for population size, using loan forgiveness amounts per borrower, or incorporating additional variables such as average student debt levels or financial aid availability. These additions would help provide a clearer picture of how college affordability and debt relief are connected across the United States.
+
+:::
+
+
+## Row 2 {height=20%}
+
+::: {.card title="**Coding note**"}
+We only used tools learned in class.
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
